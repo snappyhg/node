@@ -1,0 +1,13 @@
+{
+  "name": "hello-world-nodeapp",
+  "version": "1.0.0",
+  "description": "Minimal Node.js hello-world app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
