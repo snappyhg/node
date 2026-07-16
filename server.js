@@ -15,9 +15,18 @@ function readVersion() {
   }
 }
 
+// A second, runtime-injected value. Unlike VERSION (baked into the image), this comes from an
+// env var supplied at deploy time via the app's Kubernetes Secret (envFrom). Lets us prove a
+// secret change reaches the running container without a source change.
+function readSecretMessage() {
+  return (process.env.SECRET_MESSAGE || 'no secret set').trim();
+}
+
 function render() {
   const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-  return html.replace(/\{\{VERSION\}\}/g, readVersion());
+  return html
+    .replace(/\{\{VERSION\}\}/g, readVersion())
+    .replace(/\{\{SECRET_MESSAGE\}\}/g, readSecretMessage());
 }
 
 const HTML = render();

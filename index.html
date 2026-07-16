@@ -150,6 +150,19 @@
       text-shadow: 0 2px 32px rgba(0, 0, 0, 0.35);
     }
 
+    .secret-msg {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      font-weight: 500;
+      color: var(--text);
+      background: var(--card);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      padding: 0.5rem 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
     blockquote {
       max-width: 22ch;
       font-size: clamp(1.75rem, 5vw, 2.75rem);
@@ -251,6 +264,7 @@
 
     <div class="content">
       <h1 class="version">{{VERSION}}</h1>
+      <p class="secret-msg">{{SECRET_MESSAGE}}</p>
       <blockquote>
         The mountain remains. So can you.
         <cite>— Keep going</cite>
