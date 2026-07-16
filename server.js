@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 8080;
 
 const server = http.createServer((req, res) => {
   const body = {
-    message: 'hello world v4',
+    message: 'hello world v5',
     hostname: os.hostname(),
     time: new Date().toISOString(),
     path: req.url,
