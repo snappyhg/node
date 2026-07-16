@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keep Climbing</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sky-top: #1a1530;
+      --sky-mid: #6b3a5c;
+      --sky-glow: #c44b6a;
+      --sky-low: #e8653a;
+      --sky-horizon: #f0927a;
+      --sun-core: #fff0e6;
+      --sun: #ff6b45;
+      --sun-edge: #e84362;
+      --text: #f8f6f2;
+      --muted: rgba(248, 246, 242, 0.75);
+      --card: rgba(255, 255, 255, 0.08);
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--text);
+      background: var(--sky-top);
+    }
+
+    .scene {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* sky */
+    .sky {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        var(--sky-top) 0%,
+        #3d2456 22%,
+        var(--sky-mid) 42%,
+        var(--sky-glow) 58%,
+        var(--sky-low) 75%,
+        var(--sky-horizon) 88%,
+        #d45868 100%
+      );
+    }
+
+    .sun {
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(
+        circle,
+        var(--sun-core) 0%,
+        #ffb07a 25%,
+        var(--sun) 50%,
+        var(--sun-edge) 68%,
+        transparent 72%
+      );
+      border-radius: 50%;
+      opacity: 0.95;
+    }
+
+    .sun::after {
+      content: "";
+      position: absolute;
+      inset: -55px;
+      background: radial-gradient(
+        circle,
+        rgba(255, 110, 80, 0.5) 0%,
+        rgba(232, 90, 110, 0.3) 35%,
+        rgba(180, 60, 90, 0.12) 55%,
+        transparent 70%
+      );
+      border-radius: 50%;
+    }
+
+    /* mountains svg layer */
+    .mountains {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 65%;
+      line-height: 0;
+    }
+
+    .mountains svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .mist {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 35%;
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(200, 100, 110, 0.08) 35%,
+        rgba(230, 120, 100, 0.18) 70%,
+        rgba(210, 80, 90, 0.22) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* content */
+    .content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem 1.5rem 6rem;
+    }
+
+    .eyebrow {
+      font-family: system-ui, sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .version {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(3rem, 12vw, 6rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    blockquote {
+      max-width: 22ch;
+      font-size: clamp(1.75rem, 5vw, 2.75rem);
+      font-weight: 400;
+      line-height: 1.35;
+      font-style: italic;
+      text-shadow: 0 2px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    cite {
+      display: block;
+      margin-top: 1.5rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.9rem;
+      font-style: normal;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .cards {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      max-width: 900px;
+      margin: -11rem auto 0;
+      padding: 0 1.5rem 3rem;
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .card p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .card span {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    footer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 1.5rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.35);
+      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.25));
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scene">
+    <div class="sky"></div>
+    <div class="sun"></div>
+
+    <div class="mountains" aria-hidden="true">
+      <svg viewBox="0 0 1440 600" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+        <!-- far peaks -->
+        <path fill="#2d3e5c" d="M0,600 L0,380 L180,220 L360,340 L520,180 L720,320 L900,160 L1080,300 L1260,200 L1440,350 L1440,600 Z"/>
+        <!-- mid peaks -->
+        <path fill="#1e2d42" d="M0,600 L0,420 L240,300 L420,400 L600,260 L800,380 L1000,240 L1200,360 L1440,280 L1440,600 Z"/>
+        <!-- near ridge -->
+        <path fill="#121c2a" d="M0,600 L0,480 L200,400 L450,480 L650,360 L900,460 L1100,380 L1440,450 L1440,600 Z"/>
+        <!-- foreground -->
+        <path fill="#0a1018" d="M0,600 L0,520 L300,460 L550,530 L750,470 L1050,540 L1440,490 L1440,600 Z"/>
+        <!-- pine trees -->
+        <g fill="#0a1018">
+          <path d="M120,560 L135,520 L150,560 Z"/>
+          <path d="M145,560 L162,515 L179,560 Z"/>
+          <path d="M380,560 L398,510 L416,560 Z"/>
+          <path d="M410,560 L428,525 L446,560 Z"/>
+          <path d="M820,560 L838,505 L856,560 Z"/>
+          <path d="M1280,560 L1298,518 L1316,560 Z"/>
+          <path d="M1310,560 L1328,530 L1346,560 Z"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="mist"></div>
+
+    <div class="content">
+      <p class="eyebrow">A quiet reminder</p>
+      <h1 class="version">{{VERSION}}</h1>
+      <blockquote>
+        The mountain remains. So can you.
+        <cite>— Keep going</cite>
+      </blockquote>
+    </div>
+  </div>
+
+  <div class="cards">
+    <article class="card">
+      <p>Progress is rarely loud. Often it's one more step when stopping feels easier.</p>
+      <span>Patience</span>
+    </article>
+    <article class="card">
+      <p>You don't have to see the whole path. Only the next place to stand.</p>
+      <span>Clarity</span>
+    </article>
+    <article class="card">
+      <p>Every summit was once someone deciding not to turn back.</p>
+      <span>Persistence</span>
+    </article>
+  </div>
+
+  <footer>
+    Breathe. Begin again.
+  </footer>
+
+</body>
+</html>
